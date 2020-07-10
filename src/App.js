@@ -10,16 +10,18 @@ import { HistoricDiv } from "./components/HistoricDiv";
 const params = [];
 let clearInput = false;
 let operator = "";
-const historic = [];
 const currentHistoric = [];
 
 function App() {
   const [inputText, setInputText] = useState("");
   const [historicOp, setHistoricOp] = useState([]);
-  function handleClickHistoric(event) {
-    event.target.parentNode.parentNode.parentNode.parentNode.parentNode.childNodes[0].classList.toggle(
-      "historic"
-    );
+  const [showHistoric, setShowHistoric] = useState("hide");
+  function handleClickHistoric() {
+    // event.target.parentNode.parentNode.parentNode.parentNode.parentNode.childNodes[0].classList.toggle(
+    //   "historic"
+    // );
+    if (showHistoric !== "show") return setShowHistoric("show");
+    setShowHistoric("hide");
   }
 
   function handleClick(event) {
@@ -30,7 +32,6 @@ function App() {
     }
     if (data === "C" || data === "CE") {
       if (data === "C") {
-        console.log("fdsafaf");
         operator = "";
         params.splice(0);
         clearInput = false;
@@ -56,7 +57,6 @@ function App() {
       data === "*" ||
       data === "="
     ) {
-      console.log(params.length);
       if (params.length > 0) {
         const result = operationSum(params[0], Number(inputText), operator);
         currentHistoric.push(operator);
@@ -69,7 +69,6 @@ function App() {
         operator = data;
       } else {
         params.push(Number(inputText));
-        console.log(inputText);
         clearInput = true;
         operator = data;
         currentHistoric.push(Number(inputText));
@@ -84,7 +83,6 @@ function App() {
         const current = cualculateHistoric(currentHistoric);
         saveCurrentToHistoric(current, setHistoricOp, historicOp);
         currentHistoric.splice(0);
-        // setHistoricOp([...historicOp, historic]);
       }
       return;
     }
@@ -94,10 +92,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="historic pb-3">
-        <label>Últimas 5 operaciones</label>
-        <HistoricDiv value={historicOp} />
-      </div>
+      <HistoricDiv value={historicOp} showHistoric={showHistoric} />
       <InputResult value={inputText} />
       <table>
         <tbody>
